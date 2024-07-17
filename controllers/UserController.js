@@ -54,7 +54,7 @@ const UserController = {
     }
   },
 
-  async getProductsByName(req, res) {
+  async getUsersByName(req, res) {
     try {
       if (req.params.name.length > 20) {
         return res.status(400).send("Búsqueda demasiado larga");
@@ -91,7 +91,7 @@ const UserController = {
       const user = await User.findByIdAndUpdate(req.params._id, req.body, {
         new: true,
       });
-      res.send({ message: "product successfully updated", user });
+      res.send({ message: "user successfully updated", user });
     } catch (error) {
       console.error(error);
     }
