@@ -38,16 +38,36 @@ const PostController = {
       }
       //   const name = new RegExp(req.params.name, "i");
       //   const products = await Product.find({ name });
+      console.log(req.params.title);
 
-      const post = await Post.find({
-        $text: {
-          $search: req.params.title,
-        },
+      // -------- REVISAR ----------------------------
+
+      // NOOO - const posts = await Post.find({
+      //   $text: {
+      //     $search: req.params.title,
+      //   },
+      // });
+
+      // const posts = await Post.find({ title: req.params.title });
+
+      // const posts = await Post.find({
+      //   title: { $regex: req.params.title, $options: "i" },
+      // });
+
+      const posts = await Post.find({
+        title: new RegExp(req.params.title, "i"),
       });
 
-      res.send(products);
+      if (posts.length === 0) {
+        return res.status(404).send("No se encontraron posts con ese título");
+      }
+      console.log(posts);
+      res.send(posts);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      res.status(500).send({
+        message: "No se pudo encontrar el post",
+      });
     }
   },
 

@@ -1,10 +1,13 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 
 const { dbConnection } = require("./config/config");
 const PORT = 3000;
 
 dbConnection();
+
+app.use(cors());
 
 app.use(express.json());
 
