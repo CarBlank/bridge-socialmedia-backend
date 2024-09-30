@@ -60,13 +60,58 @@ const UserController = {
     try {
       await User.findByIdAndUpdate(req.user._id, {
         $pull: { tokens: req.headers.authorization },
-      });
-      res.send({ message: "Desconectado con éxito" });
+      })
+      res.send({ message: 'Desconectado con éxito' })
     } catch (error) {
-      console.error(error);
+      console.error(error)
       res.status(500).send({
-        message: "Hubo un problema al intentar desconectar al usuario",
-      });
+        message: 'Hubo un problema al intentar desconectar al usuario',
+      })
+    }
+  },
+
+  // async logout(req, res) {
+  //   try {
+  //     const userId = req.user._id;
+  //     const token = req.headers.authorization;
+  
+  //     if (!userId || !token) {
+  //       return res.status(400).send({ message: 'Faltan datos necesarios para desconectar al usuario' });
+  //     }
+  
+  //     const user = await User.findByIdAndUpdate(
+  //       userId,
+  //       { $pull: { tokens: token } },
+  //       { new: true }
+  //     );
+  
+  //     if (!user) {
+  //       return res.status(404).send({ message: 'Usuario no encontrado' });
+  //     }
+  
+  //     res.send({ message: 'Desconectado con éxito' });
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(500).send({
+  //       message: 'Hubo un problema al intentar desconectar al usuario',
+  //     });
+  //   }
+  // },
+  
+  async getInfo(req, res) {
+    try {
+      const user = await User.findById(req.user._id)
+      .populate({
+        path: "postIds",
+        populate: {
+          path: "commentIds",
+        },
+      })
+  
+      .populate ('wishlist')
+      res.send(user)
+    } catch (error) {
+      console.error(error)
     }
   },
 
@@ -87,6 +132,18 @@ const UserController = {
       console.error(error);
     }
   },
+
+  async like(req, res) {
+    try {
+    await User.findByIdAndUpdate(req.user._id,
+      { $push: { wishList: req.params._id } },
+      { new: true })
+       res.send(product)
+     } catch (error) {
+       console.error(error)
+       res.status(500).send({ message: "Hubo un problema con la solicitud" })
+     }
+   },
 
   async getUsersByName(req, res) {
     try {

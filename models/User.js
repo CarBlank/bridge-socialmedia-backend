@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const ObjectId = mongoose.SchemaTypes.ObjectId
 
 const UserSchema = new mongoose.Schema(
   {
@@ -22,6 +23,7 @@ const UserSchema = new mongoose.Schema(
     },
     role: String,
     tokens: [],
+    wishList: [{type:ObjectId, ref: 'Post'}]
     //   orderIds: [{ type: ObjectId, ref: 'Order' }],
   },
   { timestamps: true }
